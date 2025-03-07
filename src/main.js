@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 
@@ -16,6 +16,13 @@ const createWindow = () => {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
+
+  // Accept content sent from the rendering process
+  ipcMain.on('set-title', (event, title) => {
+    const webContents = event.sender
+    const win = BrowserWindow.fromWebContents(webContents)
+    win.setTitle(title)
+  })
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
