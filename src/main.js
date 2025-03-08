@@ -1,6 +1,9 @@
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, Menu, ipcMain, dialog } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
+
+// Avoid Warning：Electron Security Warning (Insecure Content-Security-Policy) This renderer process has either no Content Security
+process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -30,6 +33,24 @@ const createWindow = () => {
     const win = BrowserWindow.fromWebContents(webContents)
     win.setTitle(title)
   })
+
+  const menu = Menu.buildFromTemplate([
+    {
+      label: 'Menu',
+      submenu: [
+        {
+          click: () => mainWindow.webContents.send('update-counter', 1),
+          label: 'Increment'
+        },
+        {
+          click: () => mainWindow.webContents.send('update-counter', -1),
+          label: 'Decrement'
+        }
+      ]
+    }
+  ])
+
+  Menu.setApplicationMenu(menu)
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {

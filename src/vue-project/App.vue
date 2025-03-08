@@ -9,6 +9,7 @@
       <RouterLink to="/">Go to Home</RouterLink>
     </div>
     <div>
+      <RouterLink to="/mainToRender">Main-Process --> Render-Process</RouterLink>
       <RouterLink to="/renderToMainTwoWay">Render-Process <span style="font-size: 10px;"><--></span> Main-Process
       </RouterLink>
       <RouterLink to="/renderToMain">Render-Process <span style="font-size: 10px;">--></span> Main-Process</RouterLink>
