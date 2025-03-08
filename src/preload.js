@@ -4,4 +4,5 @@ const { contextBridge, ipcRenderer } = require('electron/renderer')
 
 contextBridge.exposeInMainWorld('electronAPI', {
   openFile: () => ipcRenderer.invoke('dialog:openFile'),
+  setTitle: (title) => ipcRenderer.send('set-title', title),
 })
