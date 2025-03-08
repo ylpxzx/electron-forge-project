@@ -1,10 +1,17 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
+}
+
+async function handleFileOpen () {
+  const { canceled, filePaths } = await dialog.showOpenDialog()
+  if (!canceled) {
+    return filePaths[0]
+  }
 }
 
 const createWindow = () => {
@@ -33,6 +40,9 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow();
+
+  // Bidirectional communication between rendering process and main process
+  ipcMain.handle('dialog:openFile', handleFileOpen)
 
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
